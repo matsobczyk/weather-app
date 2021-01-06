@@ -1,6 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_cmoon_icons/flutter_cmoon_icons.dart';
+import 'package:http/http.dart' as http;
+
+const apiUrl = 'http://192.168.1.45:3000/example';
 
 class InfoCard extends StatelessWidget {
   InfoCard({this.text, this.value, this.unit});
@@ -103,6 +105,28 @@ class TemperatureInfo extends StatelessWidget {
   }
 }
 
+class Weather {
+  final String location;
+  final String time;
+  final String day;
+  final String date;
+  final String temperature;
+  final String dayTime;
+
+  Weather({this.location, this.time, this.day, this.date, this.temperature, this.dayTime});
+
+  factory Weather.fromJson(Map<String, dynamic> json) {
+    return Weather(
+      location: json['location'],
+      time: json['time'],
+      day: json['day'],
+      date: json['date'],
+      temperature: json['temperature'],
+      dayTime: json['dayTime'],
+    );
+  }
+}
+
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
     Key key,
@@ -119,8 +143,11 @@ class CustomAppBar extends StatelessWidget {
         leading: IconButton(icon: Icon(
           Icons.search, size: 30,
           color: Colors.white,),
-            onPressed: () {
+            onPressed: () async {
               print('Search Clicked');
+              print(await http.read('http://192.168.1.45:3000/example'));
+
+
             }),
         actions: [
           Container(
@@ -137,3 +164,4 @@ class CustomAppBar extends StatelessWidget {
     );
   }
 }
+
