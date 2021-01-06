@@ -105,28 +105,6 @@ class TemperatureInfo extends StatelessWidget {
   }
 }
 
-class Weather {
-  final String location;
-  final String time;
-  final String day;
-  final String date;
-  final String temperature;
-  final String dayTime;
-
-  Weather({this.location, this.time, this.day, this.date, this.temperature, this.dayTime});
-
-  factory Weather.fromJson(Map<String, dynamic> json) {
-    return Weather(
-      location: json['location'],
-      time: json['time'],
-      day: json['day'],
-      date: json['date'],
-      temperature: json['temperature'],
-      dayTime: json['dayTime'],
-    );
-  }
-}
-
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
     Key key,
