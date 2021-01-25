@@ -13,10 +13,12 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   Future<Weather> futureWeather;
 
+  var txt = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-    futureWeather = fetchWeather();
+    futureWeather = fetchWeather('Gdynia');
   }
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,50 @@ class _StartPageState extends State<StartPage> {
           Container(
             decoration: BoxDecoration(color: Colors.black26),
           ),
-          CustomAppBar(),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2),
+          child: AppBar(
+            title: Text(""),
+            backgroundColor: Colors.transparent,
+            actions: <Widget>[
+              Row(
+                children: [
+                  Container(
+                    width:350,
+                    padding: const EdgeInsets.all(16.0),
+                    child: TextFormField(
+                      showCursor: false,
+                      decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                      controller: txt,
+                    ),
+                  ),
+                  IconButton(icon: Icon(Icons.search), onPressed: () {
+                    setState(() {
+
+                      futureWeather = fetchWeather(txt.text);
+                      txt.clear();
+                    });
+
+                  })
+                ],
+              ),
+
+            ],
+
+            elevation: 0,
+
+          ),
+        ),
           FutureBuilder(
             future: futureWeather,
             builder: (context, snapshot) {
@@ -56,11 +101,11 @@ class _StartPageState extends State<StartPage> {
                                     GeoLocInfo(
                                       location: snapshot.data.location,
                                       time: snapshot.data.time,
-                                      day: snapshot.data.day,
+                                      day: snapshot.data.day.toString(),
                                       date: snapshot.data.date,),
                                     TemperatureInfo(
-                                      temperature: snapshot.data.temperature,
-                                      icon: IconMoon.icon_moonset1,
+                                      temperature: snapshot.data.temperature.toString().split('.')[0] +' °C',
+                                      icon: IconMoon.icon_sun3,
                                       dayTime: snapshot.data.dayTime,),
                                   ],
                                 )),
@@ -70,9 +115,9 @@ class _StartPageState extends State<StartPage> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      InfoCard(text: 'Wiatr', value: '24', unit: 'km/h',),
-                                      InfoCard(text: 'Deszcz', value: '60', unit: '%',),
-                                      InfoCard(text: 'Wilgotność', value: '27', unit: '%',),
+                                      InfoCard(text: 'Deszcz', value: snapshot.data.rainProbability.toString().split(' ')[0], unit: '%',),
+                                      InfoCard(text: 'Wiatr', value: snapshot.data.windSpeed.toString().split(' ')[0], unit: 'm/s',),
+                                      InfoCard(text: 'Wilgotność', value: snapshot.data.humidity.toString().split('%')[0], unit: '%',),
                                     ],
                                   ),
                                 ),
@@ -85,14 +130,22 @@ class _StartPageState extends State<StartPage> {
                   ),
                 );
               }else if (snapshot.hasError){
+                print(snapshot);
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text ("${snapshot.error}"),
+                    Center(child: Text('Check Spelling', style: TextStyle(
+                      color: Colors.white, fontSize: 27) ,))
                   ],
                 );
               }
-              return CircularProgressIndicator();
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                ],
+              );
             },
           ),
         ]

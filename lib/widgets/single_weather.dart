@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cmoon_icons/flutter_cmoon_icons.dart';
 import 'package:http/http.dart' as http;
 
-const apiUrl = 'http://192.168.1.45:3000/example';
+import '../weatherApi.dart';
 
 class InfoCard extends StatelessWidget {
   InfoCard({this.text, this.value, this.unit});
@@ -34,8 +34,6 @@ class GeoLocInfo extends StatelessWidget {
   final time;
   final day;
   final date;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +69,7 @@ class TemperatureInfo extends StatelessWidget {
   final icon;
   final dayTime;
 
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -80,63 +79,28 @@ class TemperatureInfo extends StatelessWidget {
         children: [
           SizedBox(height: 120,),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 0),
+            padding: EdgeInsets.symmetric(vertical: 10),
             child: Text(
               temperature,
               style: TextStyle(
-                  fontSize: 68,
+                  fontSize: 88,
                   fontWeight: FontWeight.bold,
                   color: Colors.white
               ),),
           ),
-          Row(
-            children: [
-              Container(
-                child: CIcon(icon, color: Colors.white, size: 80,),
-              ),
-              Text(dayTime, style: TextStyle(color: Colors.white, fontSize: 30),)
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              children: [
+                Container(
+                  child: CIcon(icon, color: Colors.white, size: 40,),
+                ),
+                Text(dayTime, style: TextStyle(color: Colors.white, fontSize: 30),)
+              ],
+            ),
           ),
           Padding(padding: EdgeInsets.symmetric(vertical: 10),
               child: Container(decoration: BoxDecoration( border: Border.all(color: Colors.white24)),))
-        ],
-      ),
-    );
-  }
-}
-
-class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2),
-      child: AppBar(
-        title: Text(""),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(icon: Icon(
-          Icons.search, size: 30,
-          color: Colors.white,),
-            onPressed: () async {
-              print('Search Clicked');
-              print(await http.read('http://192.168.1.45:3000/example'));
-
-
-            }),
-        actions: [
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
-            child: GestureDetector(
-              onTap: () => print('Menu Clicked'),
-              child: Icon(Icons.menu, size: 30,
-                color: Colors.white,
-              ),
-            ),
-          ),
         ],
       ),
     );
